@@ -9,6 +9,7 @@
 #import "ITTableViewController.h"
 #import "ITImageGetter.h"
 #import "ITTableViewCell.h"
+#import "ITPageViewController.h"
 #import "PhotoViewController.h"
 
 static NSString *CellIdentifier = @"Cell";
@@ -57,7 +58,7 @@ static NSString *CellIdentifier = @"Cell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     PhotoViewController *initialPage = [PhotoViewController photoViewControllerForPageIndex:indexPath.row];
     
-    UIPageViewController *pager = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionInterPageSpacingKey : @12, UIPageViewControllerOptionSpineLocationKey : @(UIPageViewControllerSpineLocationNone)}];
+    UIPageViewController *pager = [[ITPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionInterPageSpacingKey : @12, UIPageViewControllerOptionSpineLocationKey : @(UIPageViewControllerSpineLocationNone)}];
     
     pager.dataSource = self;
     pager.view.backgroundColor = [UIColor blackColor];

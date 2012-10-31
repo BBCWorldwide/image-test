@@ -53,8 +53,6 @@
     NSUInteger _pageIndex;
 }
 
-- (void)handleTap:(UITapGestureRecognizer*)tap;
-
 @end
 
 @implementation PhotoViewController
@@ -91,21 +89,10 @@
     self.view = scrollView;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [self.view addGestureRecognizer:tap];
-}
-
 // (this can also be defined in Info.plist via UISupportedInterfaceOrientations)
 - (NSUInteger)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskAll;
-}
-
-- (void)handleTap:(UITapGestureRecognizer *)tap {
-    [self.navigationController setNavigationBarHidden:!self.navigationController.navigationBarHidden animated:NO];
 }
 
 @end

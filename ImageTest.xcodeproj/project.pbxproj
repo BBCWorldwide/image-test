@@ -74,6 +74,7 @@
 		B10274E616387C900066E20F /* iPhone-Thumb-04@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B10274B616387C900066E20F /* iPhone-Thumb-04@2x.jpg */; };
 		B10274E916387D3A0066E20F /* ITImageGetter.m in Sources */ = {isa = PBXBuildFile; fileRef = B10274E816387D3A0066E20F /* ITImageGetter.m */; };
 		B10274ED16388B5B0066E20F /* ITTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B10274EC16388B5B0066E20F /* ITTableViewCell.m */; };
+		B1EE74D21641C529003B645A /* ITPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1EE74D11641C529003B645A /* ITPageViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -165,6 +166,8 @@
 		B10274EA16387D650066E20F /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
 		B10274EB16388B5B0066E20F /* ITTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ITTableViewCell.h; sourceTree = "<group>"; };
 		B10274EC16388B5B0066E20F /* ITTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ITTableViewCell.m; sourceTree = "<group>"; };
+		B1EE74D01641C529003B645A /* ITPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ITPageViewController.h; sourceTree = "<group>"; };
+		B1EE74D11641C529003B645A /* ITPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ITPageViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -233,6 +236,8 @@
 				B10274E816387D3A0066E20F /* ITImageGetter.m */,
 				B10274EB16388B5B0066E20F /* ITTableViewCell.h */,
 				B10274EC16388B5B0066E20F /* ITTableViewCell.m */,
+				B1EE74D01641C529003B645A /* ITPageViewController.h */,
+				B1EE74D11641C529003B645A /* ITPageViewController.m */,
 				016DDB4B1640DA580015C72E /* ImageScrollView.h */,
 				016DDB4C1640DA580015C72E /* ImageScrollView.m */,
 				016DDB4D1640DA580015C72E /* PhotoViewController.h */,
@@ -545,6 +550,7 @@
 				B10274ED16388B5B0066E20F /* ITTableViewCell.m in Sources */,
 				016DDB4F1640DA580015C72E /* ImageScrollView.m in Sources */,
 				016DDB501640DA580015C72E /* PhotoViewController.m in Sources */,
+				B1EE74D21641C529003B645A /* ITPageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

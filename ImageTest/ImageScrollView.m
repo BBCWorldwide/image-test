@@ -71,9 +71,15 @@ static NSOperationQueue *backgroundQueue;
     CGFloat  _scaleToRestoreAfterResize;
 }
 
+@property (nonatomic, readonly) UIActivityIndicatorView *activityView;
+
+- (void)setZoomScaleToFill;
+
 @end
 
 @implementation ImageScrollView
+
+@synthesize activityView = _activityView;
 
 + (void)initialize {
     backgroundQueue = [[NSOperationQueue alloc] init];
@@ -87,9 +93,19 @@ static NSOperationQueue *backgroundQueue;
         self.showsHorizontalScrollIndicator = NO;
         self.bouncesZoom = YES;
         self.decelerationRate = UIScrollViewDecelerationRateFast;
-        self.delegate = self;        
+        self.delegate = self;
     }
     return self;
+}
+
+- (UIActivityIndicatorView*)activityView {
+    if (!_activityView) {
+        _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        _activityView.hidesWhenStopped = YES;
+        [self addSubview:_activityView];
+    }
+    
+    return _activityView;
 }
 
 - (void)setIndex:(NSUInteger)index
@@ -99,12 +115,15 @@ static NSOperationQueue *backgroundQueue;
 #if TILE_IMAGES
     [self displayTiledImageNamed:_ImageNameAtIndex(index) size:_ImageSizeAtIndex(index)];
 #else
+    [self.activityView startAnimating];
+    
     [backgroundQueue addOperationWithBlock:^{
         UIImage *image = _ImageAtIndex(index);
         
         UIImage *pngImage = [UIImage imageWithData:UIImagePNGRepresentation(image)];
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [self.activityView stopAnimating];
             [self displayImage:pngImage];
         }];
     }];
@@ -122,21 +141,26 @@ static NSOperationQueue *backgroundQueue;
     
     // center the zoom view as it becomes smaller than the size of the screen
     CGSize boundsSize = self.bounds.size;
-    CGRect frameToCenter = _zoomView.frame;
     
-    // center horizontally
-    if (frameToCenter.size.width < boundsSize.width)
-        frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2;
-    else
-        frameToCenter.origin.x = 0;
+    if (!_zoomView) _zoomView = [[UIImageView alloc] init];
     
-    // center vertically
-    if (frameToCenter.size.height < boundsSize.height)
-        frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2;
-    else
-        frameToCenter.origin.y = 0;
-    
-    _zoomView.frame = frameToCenter;
+    for (UIView* view in @[_zoomView, self.activityView]) {
+        CGRect frameToCenter = view.frame;
+        
+        // center horizontally
+        if (frameToCenter.size.width < boundsSize.width)
+            frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2;
+        else
+            frameToCenter.origin.x = 0;
+        
+        // center vertically
+        if (frameToCenter.size.height < boundsSize.height)
+            frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2;
+        else
+            frameToCenter.origin.y = 0;
+        
+        view.frame = frameToCenter;
+    }
 }
 
 - (void)setFrame:(CGRect)frame
@@ -212,7 +236,30 @@ static NSOperationQueue *backgroundQueue;
     _imageSize = imageSize;
     self.contentSize = imageSize;
     [self setMaxMinZoomScalesForCurrentBounds];
-    self.zoomScale = self.minimumZoomScale;
+    [self setZoomScaleToFill];
+}
+
+- (void)setZoomScaleToFill {
+    CGSize boundsSize = self.bounds.size;
+    CGSize zoomSize = _zoomView.bounds.size;
+    
+    CGFloat xScale = boundsSize.width  / _imageSize.width;
+    CGFloat yScale = boundsSize.height / _imageSize.height;
+    
+    CGFloat scale = 1;
+    CGPoint offset = CGPointZero;
+    
+    if (yScale > xScale) { // image is landscape
+        scale = yScale;
+        offset.x = floorf(abs(boundsSize.width - zoomSize.width) / 2);
+    }
+    else {
+        scale = xScale;
+        offset.y = floorf(abs(boundsSize.height - zoomSize.width) / 2);
+    }
+    
+    self.contentOffset = offset;
+    self.zoomScale = scale;
 }
 
 - (void)setMaxMinZoomScalesForCurrentBounds
