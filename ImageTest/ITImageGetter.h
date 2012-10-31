@@ -17,6 +17,8 @@ typedef enum {
 @interface ITImageGetter : NSObject
 
 + (id)sharedImageGetter;
+- (NSUInteger)numberOfImages;
 - (NSArray*)imagesForCurrentDeviceOfSize:(ITImageSize)size;
+- (UIImage*)imageForCurrentDeviceOfSize:(ITImageSize)size atIndex:(NSUInteger)index;
 
 @end

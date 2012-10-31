@@ -10,8 +10,18 @@
 #import "SynthesizeSingleton.h"
 
 static ITImageGetter* imageGetter;
+static NSNumberFormatter *twoDigit;
+static NSOperationQueue *backgroundQueue;
 
 @implementation ITImageGetter
+
++ (void)initialize {
+    twoDigit = [[NSNumberFormatter alloc] init];
+    twoDigit.formatWidth = 2;
+    twoDigit.paddingCharacter = @"0";
+    
+    backgroundQueue = [[NSOperationQueue alloc] init];
+}
 
 - (id)init {
     if (!imageGetter) {
@@ -34,7 +44,21 @@ static ITImageGetter* imageGetter;
     return imageGetter;
 }
 
+- (NSUInteger)numberOfImages {
+    return 4;
+}
+
 - (NSArray*)imagesForCurrentDeviceOfSize:(ITImageSize)size {
+    NSMutableArray *images = [NSMutableArray arrayWithCapacity:[self numberOfImages]];
+    
+    for (int i = 0; i < [self numberOfImages]; i++) {
+        [images addObject:[self imageForCurrentDeviceOfSize:size atIndex:i]];
+    }
+    
+    return images.copy;
+}
+
+- (UIImage*)imageForCurrentDeviceOfSize:(ITImageSize)size atIndex:(NSUInteger)index {
     NSString *deviceName = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? @"iPad" : @"iPhone";
     NSString *screenRes = [[UIScreen mainScreen] scale] == 2.0 ? @"@2x" : @"";
     NSString *imageType = nil;
@@ -50,22 +74,12 @@ static ITImageGetter* imageGetter;
             break;
     }
     
-    NSNumberFormatter *twoDigit = [[NSNumberFormatter alloc] init];
-    twoDigit.formatWidth = 2;
-    twoDigit.paddingCharacter = @"0";
-    int numberOfImages = 4;
-    
-    NSMutableArray *images = [NSMutableArray arrayWithCapacity:numberOfImages];
-    
-    for (int i = 0; i < numberOfImages; i++) {
-        NSNumber *indexNumber = [NSNumber numberWithInt:i+1];
-        NSString *index = [twoDigit stringFromNumber:indexNumber];
-        NSString *imageName = [NSString stringWithFormat:@"%@-%@-%@%@",deviceName,imageType,index,screenRes];
-        NSString *imagePath = [[NSBundle mainBundle] pathForResource:imageName ofType:@"jpg"];
-        [images addObject:[UIImage imageWithContentsOfFile:imagePath]];
-    }
-    
-    return images.copy;
+    NSNumber *indexNumber = [NSNumber numberWithInt:index + 1];
+    NSString *indexString = [twoDigit stringFromNumber:indexNumber];
+    NSString *imageName = [NSString stringWithFormat:@"%@-%@-%@%@",deviceName,imageType,indexString,screenRes];
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:imageName ofType:@"jpg"];
+    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfFile:imagePath] scale:1.0];
+    return image;
 }
 
 @end

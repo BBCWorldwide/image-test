@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ITTableViewController : UITableViewController
+@interface ITTableViewController : UITableViewController <UIPageViewControllerDataSource>
 
 @end

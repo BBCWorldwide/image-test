@@ -47,15 +47,17 @@
 
 #import <Foundation/Foundation.h>
 #import "ImageScrollView.h"
-#import "TilingView.h"
+#import "ITImageGetter.h"
+//#import "TilingView.h"
 
-#define TILE_IMAGES 1
+#define TILE_IMAGES 0
 
 static NSUInteger _ImageCount(void);
-//••static UIImage   *_ImageAtIndex(NSUInteger index);
-static NSString  *_ImageNameAtIndex(NSUInteger index);
-static CGSize     _ImageSizeAtIndex(NSUInteger index);
-static UIImage   *_PlaceholderImageNamed(NSString *name);
+static UIImage   *_ImageAtIndex(NSUInteger index);
+//static NSString  *_ImageNameAtIndex(NSUInteger index);
+//static CGSize     _ImageSizeAtIndex(NSUInteger index);
+//static UIImage   *_PlaceholderImageNamed(NSString *name);
+static NSOperationQueue *backgroundQueue;
 
 @interface ImageScrollView () <UIScrollViewDelegate> {
     UIImageView *_zoomView;  // if tiling, this contains a very low-res placeholder image. otherwise it contains the full image.
@@ -72,7 +74,10 @@ static UIImage   *_PlaceholderImageNamed(NSString *name);
 @end
 
 @implementation ImageScrollView
-@synthesize index=_index;
+
++ (void)initialize {
+    backgroundQueue = [[NSOperationQueue alloc] init];
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -94,7 +99,15 @@ static UIImage   *_PlaceholderImageNamed(NSString *name);
 #if TILE_IMAGES
     [self displayTiledImageNamed:_ImageNameAtIndex(index) size:_ImageSizeAtIndex(index)];
 #else
-    [self displayImage:_ImageAtIndex(index)];
+    [backgroundQueue addOperationWithBlock:^{
+        UIImage *image = _ImageAtIndex(index);
+        
+        UIImage *pngImage = [UIImage imageWithData:UIImagePNGRepresentation(image)];
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [self displayImage:pngImage];
+        }];
+    }];
 #endif
 }
 
@@ -290,59 +303,51 @@ static UIImage   *_PlaceholderImageNamed(NSString *name);
 
 @end
 
-static NSArray *_ImageData(void)
-{
-    static NSArray *data = nil;
+//static NSArray *_ImageData(void)
+//{
+//    static NSArray *data = nil;
+//
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        NSString *path = [[NSBundle mainBundle] pathForResource:@"ImageData" ofType:@"plist"];
+//        NSData *plistData = [NSData dataWithContentsOfFile:path];
+//        NSString *error; NSPropertyListFormat format;
+//        data = [NSPropertyListSerialization propertyListFromData:plistData
+//                                                mutabilityOption:NSPropertyListImmutable
+//                                                          format:&format
+//                                                errorDescription:&error];
+//        if (!data) {
+//            NSLog(@"Unable to read image data: %@", error);
+//        }
+//    });
+//    
+//    return data;
+//}
 
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"ImageData" ofType:@"plist"];
-        NSData *plistData = [NSData dataWithContentsOfFile:path];
-        NSString *error; NSPropertyListFormat format;
-        data = [NSPropertyListSerialization propertyListFromData:plistData
-                                                mutabilityOption:NSPropertyListImmutable
-                                                          format:&format
-                                                errorDescription:&error];
-        if (!data) {
-            NSLog(@"Unable to read image data: %@", error);
-        }
-    });
-    
-    return data;
+static NSUInteger _ImageCount(void) {
+    return [[ITImageGetter sharedImageGetter] numberOfImages];
 }
 
-static NSUInteger _ImageCount(void)
-{
-    static NSUInteger count = 0;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        count = [_ImageData() count];
-    });
-    return count;
-}
-/*
 // we use "imageWithContentsOfFile:" instead of "imageNamed:" here to avoid caching
 static UIImage *_ImageAtIndex(NSUInteger index)
 {
-    NSString *imageName = _ImageNameAtIndex(index);
-    NSString *path = [[NSBundle mainBundle] pathForResource:imageName ofType:@"jpg"];
-    return [UIImage imageWithContentsOfFile:path];
-}*/
-
-static NSString *_ImageNameAtIndex(NSUInteger index)
-{
-    NSDictionary *info = [_ImageData() objectAtIndex:index];
-    return [info valueForKey:@"name"];
+    return [[ITImageGetter sharedImageGetter] imageForCurrentDeviceOfSize:ITImageSizeFull atIndex:index];
 }
 
-static CGSize _ImageSizeAtIndex(NSUInteger index)
-{
-    NSDictionary *info = [_ImageData() objectAtIndex:index];
-    return CGSizeMake([[info valueForKey:@"width"] floatValue],
-                      [[info valueForKey:@"height"] floatValue]);
-}
+//static NSString *_ImageNameAtIndex(NSUInteger index)
+//{
+//    NSDictionary *info = [_ImageData() objectAtIndex:index];
+//    return [info valueForKey:@"name"];
+//}
 
-static UIImage *_PlaceholderImageNamed(NSString *name)
-{
-    return [UIImage imageNamed:[NSString stringWithFormat:@"%@_Placeholder", name]];
-}
+//static CGSize _ImageSizeAtIndex(NSUInteger index)
+//{
+//    NSDictionary *info = [_ImageData() objectAtIndex:index];
+//    return CGSizeMake([[info valueForKey:@"width"] floatValue],
+//                      [[info valueForKey:@"height"] floatValue]);
+//}
+
+//static UIImage *_PlaceholderImageNamed(NSString *name)
+//{
+//    return [UIImage imageNamed:[NSString stringWithFormat:@"%@_Placeholder", name]];
+//}

@@ -9,6 +9,7 @@
 #import "ITTableViewController.h"
 #import "ITImageGetter.h"
 #import "ITTableViewCell.h"
+#import "PhotoViewController.h"
 
 static NSString *CellIdentifier = @"Cell";
 
@@ -24,8 +25,12 @@ static NSString *CellIdentifier = @"Cell";
 {
     [super viewDidLoad];
     
-    [self.tableView registerClass:[ITTableViewCell class] forCellReuseIdentifier:CellIdentifier];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:CellIdentifier];
     self.tableView.rowHeight = 54;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        self.tableView.rowHeight *= 2;
+    }
     
     self.thumbnails = [[ITImageGetter sharedImageGetter] imagesForCurrentDeviceOfSize:ITImageSizeThumb];
 }
@@ -50,7 +55,28 @@ static NSString *CellIdentifier = @"Cell";
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    PhotoViewController *initialPage = [PhotoViewController photoViewControllerForPageIndex:indexPath.row];
+    
+    UIPageViewController *pager = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{UIPageViewControllerOptionInterPageSpacingKey : @12, UIPageViewControllerOptionSpineLocationKey : @(UIPageViewControllerSpineLocationNone)}];
+    
+    pager.dataSource = self;
+    pager.view.backgroundColor = [UIColor blackColor];
+    
+    [pager setViewControllers:@[initialPage] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    
+    [self.navigationController pushViewController:pager animated:YES];
+}
 
+#pragma mark - Page View Controller Data Source
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerBeforeViewController:(PhotoViewController *)vc {
+    NSUInteger index = vc.pageIndex;
+    return [PhotoViewController photoViewControllerForPageIndex:(index - 1)];
+}
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pvc viewControllerAfterViewController:(PhotoViewController *)vc {
+    NSUInteger index = vc.pageIndex;
+    return [PhotoViewController photoViewControllerForPageIndex:(index + 1)];
 }
 
 @end

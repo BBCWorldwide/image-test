@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		016DDB4F1640DA580015C72E /* ImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 016DDB4C1640DA580015C72E /* ImageScrollView.m */; };
+		016DDB501640DA580015C72E /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 016DDB4E1640DA580015C72E /* PhotoViewController.m */; };
 		B102744916387B290066E20F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B102744816387B290066E20F /* UIKit.framework */; };
 		B102744B16387B290066E20F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B102744A16387B290066E20F /* Foundation.framework */; };
 		B102744D16387B290066E20F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B102744C16387B290066E20F /* CoreGraphics.framework */; };
@@ -85,6 +87,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		016DDB4B1640DA580015C72E /* ImageScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageScrollView.h; sourceTree = "<group>"; };
+		016DDB4C1640DA580015C72E /* ImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageScrollView.m; sourceTree = "<group>"; };
+		016DDB4D1640DA580015C72E /* PhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoViewController.h; sourceTree = "<group>"; };
+		016DDB4E1640DA580015C72E /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		B102744416387B290066E20F /* ImageTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B102744816387B290066E20F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B102744A16387B290066E20F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -227,6 +233,10 @@
 				B10274E816387D3A0066E20F /* ITImageGetter.m */,
 				B10274EB16388B5B0066E20F /* ITTableViewCell.h */,
 				B10274EC16388B5B0066E20F /* ITTableViewCell.m */,
+				016DDB4B1640DA580015C72E /* ImageScrollView.h */,
+				016DDB4C1640DA580015C72E /* ImageScrollView.m */,
+				016DDB4D1640DA580015C72E /* PhotoViewController.h */,
+				016DDB4E1640DA580015C72E /* PhotoViewController.m */,
 				B10274EA16387D650066E20F /* SynthesizeSingleton.h */,
 				B102744F16387B290066E20F /* Supporting Files */,
 			);
@@ -533,6 +543,8 @@
 				B102747F16387B690066E20F /* ITTableViewController.m in Sources */,
 				B10274E916387D3A0066E20F /* ITImageGetter.m in Sources */,
 				B10274ED16388B5B0066E20F /* ITTableViewCell.m in Sources */,
+				016DDB4F1640DA580015C72E /* ImageScrollView.m in Sources */,
+				016DDB501640DA580015C72E /* PhotoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,7 +642,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImageTest/ImageTest-Prefix.pch";
 				INFOPLIST_FILE = "ImageTest/ImageTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -641,7 +655,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImageTest/ImageTest-Prefix.pch";
 				INFOPLIST_FILE = "ImageTest/ImageTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -699,6 +715,7 @@
 				B102747916387B290066E20F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B102747A16387B290066E20F /* Build configuration list for PBXNativeTarget "ImageTestTests" */ = {
 			isa = XCConfigurationList;
@@ -707,6 +724,7 @@
 				B102747C16387B290066E20F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
